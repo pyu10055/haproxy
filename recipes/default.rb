@@ -57,10 +57,12 @@ if conf['enable_default_http']
   servers = node['haproxy']['members'].map do |member|
     "#{member['hostname']} #{member['ipaddress']}:#{member['port'] || member_port} weight #{member['weight'] || member_weight} maxconn #{member['max_connections'] || member_max_conn} check"
   end
-  haproxy_lb 'servers-http' do
-    type 'backend'
-    servers servers
-    params pool
+  if servers.any?
+    haproxy_lb 'servers-http' do
+      type 'backend'
+      servers servers
+      params pool
+    end
   end
 end
 
