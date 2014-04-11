@@ -10,7 +10,13 @@ action :create do
   listener += new_resource.servers.map {|server| "server #{server}" }
 
   if new_resource.params.is_a? Hash
-    listener += new_resource.params.map { |k,v| "#{k} #{v}" }
+    listener += new_resource.params.map do |k,v|
+      if v.is_a? Array
+        v.map {|value| "#{k} #{value}"}
+      else
+        "#{k} #{v}"
+      end
+    end.flatten
   else
     listener += new_resource.params
   end

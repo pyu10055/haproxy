@@ -52,16 +52,17 @@ haproxy_lb 'servers-http' do
 end
 
 if node['haproxy']['enable_ssl']
-  pool = ["option ssl-hello-chk"]
+  pool = ["cookie SERVERID insert indirect nocache"]
   pool << ["options httpchk #{node['haproxy']['ssl_httpchk']}"] if node['haproxy']['ssl_httpchk']
   servers = pool_members.uniq.map do |s|
     "#{s[:hostname]} #{s[:ipaddress]}:#{node['haproxy']['ssl_member_port']} weight 1 maxconn #{node['haproxy']['member_max_connections']} check"
   end
-  haproxy_lb 'servers-http' do
+  haproxy_lb 'servers-https' do
     type 'backend'
     mode 'http'
-    servers servers
+    balance "roundrobin"
     params pool
+    servers servers
   end
 end
 
