@@ -77,7 +77,7 @@ if node['haproxy']['enable_ssl']
       'default_backend' => 'servers-https',
       'reqadd' => 'X-Forwarded-Proto:\ https',
       'option' => ['httpclose', 'forwardfor']
-      
+
     })
   end
 
