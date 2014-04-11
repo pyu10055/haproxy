@@ -35,7 +35,6 @@ node.default['haproxy']['conf_dir'] = "#{node['haproxy']['source']['prefix']}/#{
 
 remote_file "#{Chef::Config[:file_cache_path]}/haproxy-#{node['haproxy']['source']['version']}.tar.gz" do
   source node['haproxy']['source']['url']
-  checksum node['haproxy']['source']['checksum']
   action :create_if_missing
 end
 

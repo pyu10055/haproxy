@@ -59,7 +59,7 @@ if node['haproxy']['enable_ssl']
   end
   haproxy_lb 'servers-http' do
     type 'backend'
-    mode 'tcp'
+    mode 'http'
     servers servers
     params pool
   end
