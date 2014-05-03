@@ -47,9 +47,9 @@ if conf['enable_default_http']
       'bind' => "#{conf['incoming_address']}:#{conf['incoming_port']}"
   }
   if conf['auto_redirect_ssl']
-    frontend_params.merge({'redirect' => "scheme https if !{ ssl_fc }"})
+    frontend_params.merge!({'redirect' => "scheme https if !{ ssl_fc }"})
   else
-    frontend_params.merge({'default_backend' => 'servers-http'})
+    frontend_params.merge!({'default_backend' => 'servers-http'})
   end
 
   haproxy_lb 'http' do
