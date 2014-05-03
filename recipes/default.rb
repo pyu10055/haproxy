@@ -42,13 +42,19 @@ member_max_conn = conf['member_max_connections']
 member_weight = conf['member_weight']
 
 if conf['enable_default_http']
+  frontend_params = {
+      'maxconn' => conf['frontend_max_connections'],
+      'bind' => "#{conf['incoming_address']}:#{conf['incoming_port']}"
+  }
+  if conf['auto_redirect_ssl']
+    frontend_params.merge({'redirect' => "scheme https if !{ ssl_fc }"})
+  else
+    frontend_params.merge({'default_backend' => 'servers-http'})
+  end
+
   haproxy_lb 'http' do
     type 'frontend'
-    params({
-      'maxconn' => conf['frontend_max_connections'],
-      'bind' => "#{conf['incoming_address']}:#{conf['incoming_port']}",
-      'default_backend' => 'servers-http'
-    })
+    params frontend_params
   end
 
   member_port = conf['member_port']

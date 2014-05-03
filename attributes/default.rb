@@ -45,6 +45,7 @@ default['haproxy']['ssl_incoming_port'] = 443
 default['haproxy']['ssl_member_port'] = 8080
 default['haproxy']['httpchk'] = nil
 default['haproxy']['ssl_httpchk'] = nil
+default['haproxy']['auto_redirect_ssl'] = false
 default['haproxy']['enable_admin'] = true
 default['haproxy']['admin']['address_bind'] = "127.0.0.1"
 default['haproxy']['admin']['port'] = 22002
