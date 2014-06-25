@@ -85,7 +85,7 @@ if node['haproxy']['enable_ssl']
   haproxy_lb 'https' do
     type 'frontend'
     mode 'http'
-    params acl
+    params acls
     params({
       'maxconn' => node['haproxy']['frontend_ssl_max_connections'],
       'bind' => "#{node['haproxy']['ssl_incoming_address']}:#{node['haproxy']['ssl_incoming_port']} ssl crt #{node['haproxy']['ssl_crt_path']}",
