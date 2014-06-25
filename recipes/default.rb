@@ -74,16 +74,24 @@ end
 
 
 if node['haproxy']['enable_ssl']
+  whitelist_ips = node['haproxy']['whitelist_ips'] || []
+  whitelist_urls = node['haproxy']['whitelist_urls'] || []
+  acls = whitelist_urls.collect {|url| "acl restricted_page path_beg #{url}"}
+  if acls.any?
+    acls.unshift "acl network_allowed src #{whitelist_ips.join(" ")}"
+    acls << "block if restricted_page !network_allowed"
+  end
+
   haproxy_lb 'https' do
     type 'frontend'
     mode 'http'
+    params acl
     params({
       'maxconn' => node['haproxy']['frontend_ssl_max_connections'],
       'bind' => "#{node['haproxy']['ssl_incoming_address']}:#{node['haproxy']['ssl_incoming_port']} ssl crt #{node['haproxy']['ssl_crt_path']}",
       'default_backend' => 'servers-https',
       'reqadd' => 'X-Forwarded-Proto:\ https',
       'option' => ['httpclose', 'forwardfor']
-
     })
   end
 
